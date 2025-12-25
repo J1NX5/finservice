@@ -21,4 +21,26 @@ export class FinService {
         });
     }
     
+    async call_quoteSummary(symbol:string){
+        const result = await this.yahooFinance.quoteSummary(symbol, {
+            modules:[
+                'price',
+                'summaryDetail',
+                'financialData',
+                'defaultKeyStatistics'
+            ]
+        })
+        console.log(result)
+    }
+
+    async call_earnings(symbol:string){
+        const result = await this.yahooFinance.quoteSummary(symbol, {
+            modules:[
+                "earnings",
+                "earningsHistory",
+                "earningsTrend"
+            ]
+        })
+        console.log(result)
+    }
 }
