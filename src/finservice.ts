@@ -41,6 +41,6 @@ export class FinService {
                 "earningsTrend"
             ]
         })
-        console.log(result)
+        console.log(result.earningsTrend?.trend)
     }
 }
