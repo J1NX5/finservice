@@ -16,7 +16,8 @@ export class DatabaseService {
             this.db.run(`
                 CREATE TABLE IF NOT EXISTS stock_data (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    date DATETIME NOT NULL,
+                    symbol TEXT NOT NULL,
+                    date INTEGER NOT NULL,
                     high REAL NOT NULL,
                     volume INTEGER NOT NULL,
                     open REAL NOT NULL,
@@ -28,7 +29,8 @@ export class DatabaseService {
     }
 
     public insertStockData(data: {
-        date: string;
+        symbol: string,
+        date: number;
         high: number;
         volume: number;
         open: number;
@@ -36,13 +38,13 @@ export class DatabaseService {
         close: number;
     }): void {
         const sql = `
-            INSERT INTO stock_data (date, high, volume, open, low, close)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO stock_data (symbol, date, high, volume, open, low, close)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
         this.db.run(
             sql,
-            [data.date, data.high, data.volume, data.open, data.low, data.close],
+            [data.symbol, data.date, data.high, data.volume, data.open, data.low, data.close],
             (err: Error | null) => {
                 if (err) {
                     console.error("Error:", err.message);

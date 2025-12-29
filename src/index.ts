@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { FinService } from "./finservice.js";
 
 const finService = new FinService();
+await finService.initialProcess()
 //const quote = await finService.call_quote('IBM');
 
 // const now = new Date()

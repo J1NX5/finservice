@@ -3,6 +3,16 @@ import { DatabaseService } from "./dbservice.js";
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
+interface StockData {
+    symbol: string;
+    date: number;
+    high: number;
+    volume: number;
+    open: number;
+    low: number;
+    close: number;
+}
+
 export class FinService {
 
     private yahooFinance: InstanceType<typeof YahooFinance>;
@@ -14,11 +24,26 @@ export class FinService {
 
     constructor(){
         this.yahooFinance = new YahooFinance();
-        this.yamlData = this.loadYamlFile('./symbols.yaml');
-        this.yamlData.forEach((symbol) => {
-            console.log(symbol)
-        });
+    }
 
+    public async initialProcess(){
+        this.yamlData = this.loadYamlFile('./symbols.yaml');
+        for(const symb of this.yamlData){
+            const result = await this.call_chart(symb, this.days8Befor as string, this.nowUTCString as string, '1m')
+            for(const elem of result.quotes){
+                console.log(elem)
+                const data : StockData = { 
+                    symbol: symb,
+                    date: elem.date.getTime() / 1000,
+                    high: elem.high ?? 0,
+                    volume: elem.volume ?? 0,
+                    open: elem.open ?? 0,
+                    low: elem.low ?? 0,
+                    close: elem.close ?? 0
+                }
+                this.dbsObj.insertStockData(data)
+            }
+        }
     }
 
     private loadYamlFile(filePath: string) {
