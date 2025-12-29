@@ -1,7 +1,7 @@
 import * as sqlite3 from 'sqlite3';
 import { Database as SQLiteDatabase } from 'sqlite3';
 
-export class Database {
+export class DatabaseService {
 
     private db: SQLiteDatabase;
 
@@ -24,5 +24,31 @@ export class Database {
                 );
             `);
         });
+    }
+
+    public insertStockData(data: {
+        date: string;
+        high: number;
+        volume: number;
+        open: number;
+        low: number;
+        close: number;
+    }): void {
+        const sql = `
+            INSERT INTO stock_data (date, high, volume, open, low, close)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+
+        this.db.run(
+            sql,
+            [data.date, data.high, data.volume, data.open, data.low, data.close],
+            (err: Error | null) => {
+                if (err) {
+                    console.error("Error:", err.message);
+                } else {
+                    console.log("Success");
+                }
+            }
+        );
     }
 }
