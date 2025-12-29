@@ -44,4 +44,15 @@ export class FinService {
         })
         console.log(result)
     }
+    
+    // maybe instead earning
+    async call_bs_quarterly(){
+        const balanceSheetData = await this.yahooFinance.fundamentalsTimeSeries('AAPL', {
+            period1: '2022-01-01',
+            period2: '2025-01-01',
+            type: 'quarterly',
+            module: 'balance-sheet'
+        });
+        console.log(balanceSheetData)
+    }
 }
