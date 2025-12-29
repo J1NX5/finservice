@@ -10,7 +10,8 @@ export class FinService {
     private nowUTCString: String= this.now.toUTCString()
     private days8Befor: String = new Date(this.now.getTime() - 8 * 24 * 60 * 60 * 1000).toUTCString()
     private yamlData = this.loadYamlFile('./symbols.yaml');
-
+    private dbsObj: DatabaseService = new DatabaseService();
+    
     constructor(){
         this.yahooFinance = new YahooFinance();
         console.log(this.yamlData)
