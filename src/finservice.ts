@@ -9,24 +9,29 @@ export class FinService {
     private now: Date = new Date()
     private nowUTCString: String= this.now.toUTCString()
     private days8Befor: String = new Date(this.now.getTime() - 8 * 24 * 60 * 60 * 1000).toUTCString()
-    private yamlData = this.loadYamlFile('./symbols.yaml');
+    private yamlData: string[] = []
     private dbsObj: DatabaseService = new DatabaseService();
-    
+
     constructor(){
         this.yahooFinance = new YahooFinance();
-        console.log(this.yamlData)
+        this.yamlData = this.loadYamlFile('./symbols.yaml');
+        this.yamlData.forEach((symbol) => {
+            console.log(symbol)
+        });
+
     }
 
     private loadYamlFile(filePath: string) {
         try {
             const fileContents = fs.readFileSync(filePath, 'utf8');
-            const data = yaml.load(fileContents);
-            return data;
+            const data = yaml.load(fileContents) as { symbols: string[] };
+            return data.symbols
         } catch (error) {
             console.error("Error", error);
             throw error;
         }
     }
+
 
     async call_quote(symbol: string){
         const quote = await this.yahooFinance.quote(symbol);

@@ -14,7 +14,7 @@ export class DatabaseService {
     private initializeDatabase(): void {
         this.db.serialize(() => {
             this.db.run(`
-                CREATE TABLE stock_data (
+                CREATE TABLE IF NOT EXISTS stock_data (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     date DATETIME NOT NULL,
                     high REAL NOT NULL,
