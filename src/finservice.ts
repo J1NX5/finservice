@@ -10,7 +10,7 @@ export class FinService {
 
     async call_quote(symbol: string){
         const quote = await this.yahooFinance.quote(symbol);
-        return quote
+        console.log(quote)
     }
 
     // periods must have this format: '2023-01-01'
@@ -19,6 +19,7 @@ export class FinService {
             period1: period1,
             period2: period2
         });
+        return result
     }
     
     async call_quoteSummary(symbol:string){
@@ -41,6 +42,6 @@ export class FinService {
                 "earningsTrend"
             ]
         })
-        console.log(result.earningsTrend?.trend)
+        console.log(result)
     }
 }
