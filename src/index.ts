@@ -3,7 +3,7 @@ import { FinService } from "./finservice.js";
 
 const finService = new FinService();
 // await finService.initialProcess()
-await finService.fill_chart_data('AAPL');
+await finService.fill_chart_data();
 //const quote = await finService.call_quote('IBM');
 
 // const now = new Date()
