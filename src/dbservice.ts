@@ -17,12 +17,13 @@ export class DatabaseService {
                 CREATE TABLE IF NOT EXISTS stock_data (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     symbol TEXT NOT NULL,
-                    date INTEGER NOT NULL UNIQUE,
+                    date INTEGER NOT NULL,
                     high REAL NOT NULL,
                     volume INTEGER NOT NULL,
                     open REAL NOT NULL,
                     low REAL NOT NULL,
-                    close REAL NOT NULL
+                    close REAL NOT NULL,
+                    UNIQUE(symbol, date)
                 );
             `);
         });
