@@ -58,7 +58,7 @@ export class FinService {
             const data = yaml.load(fileContents) as { symbols: string[] };
             return data.symbols
         } catch (error) {
-            console.error("Error", error);
+            console.error("Error in loadYamlFile", error);
             throw error;
         }
     }
@@ -85,30 +85,34 @@ export class FinService {
     }
 
     async fill_chart_data(){
-        this.yamlData = this.loadYamlFile('./symbols.yaml');
-        for(const symb of this.yamlData){
-            this.dbsObj.get_last_datetime_of_symbol(symb)
-                .then(async (last_date) => {
-                    let start_period1: string;
-                    if (last_date) {
-                        const lastDateObj = new Date((last_date * 1000)+1);
-                        let start_period1 = lastDateObj.toUTCString();
-                        // console.log(`${start_period1} ${this.nowUTCString}`);
-                        let result = await this.call_chart(symb, start_period1, this.nowUTCString as string, '1m')
-                        for(const elem of result.quotes){
-                            const data : StockData = { 
-                                symbol: symb,
-                                date: elem.date.getTime() / 1000,
-                                high: elem.high ?? 0,
-                                volume: elem.volume ?? 0,
-                                open: elem.open ?? 0,
-                                low: elem.low ?? 0,
-                                close: elem.close ?? 0
+        try {
+            this.yamlData = this.loadYamlFile('./symbols.yaml');
+            for(const symb of this.yamlData){
+                this.dbsObj.get_last_datetime_of_symbol(symb)
+                    .then(async (last_date) => {
+                        let start_period1: string;
+                        if (last_date) {
+                            const lastDateObj = new Date((last_date * 1000)+1);
+                            let start_period1 = lastDateObj.toUTCString();
+                            // console.log(`${start_period1} ${this.nowUTCString}`);
+                            let result = await this.call_chart(symb, start_period1, this.nowUTCString as string, '1m')
+                            for(const elem of result.quotes){
+                                const data : StockData = { 
+                                    symbol: symb,
+                                    date: elem.date.getTime() / 1000,
+                                    high: elem.high ?? 0,
+                                    volume: elem.volume ?? 0,
+                                    open: elem.open ?? 0,
+                                    low: elem.low ?? 0,
+                                    close: elem.close ?? 0
+                                }
+                                this.dbsObj.insertStockData(data)
                             }
-                            this.dbsObj.insertStockData(data)
                         }
-                    }
-                });
+                    });
+            }
+        } catch (error) {
+            console.error("Error in fill_chart_data:", error);
         }
     }
     

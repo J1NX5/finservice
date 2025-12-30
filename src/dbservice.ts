@@ -6,7 +6,7 @@ export class DatabaseService {
 
     constructor(){
         this.db = new sqlite3.Database('database.db', (err) => {
-            if (err) console.error("Error", err.message);
+            if (err) console.error("Error in constructor by create db", err.message);
         });
         this.initializeDatabase()
     }
@@ -85,7 +85,7 @@ export class DatabaseService {
             [data.symbol, data.date, data.high, data.volume, data.open, data.low, data.close],
             (err: Error | null) => {
                 if (err) {
-                    console.error("Error:", err.message);
+                    console.error("Error in insertStockData", err.message);
                 }
             }
         );

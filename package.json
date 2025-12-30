@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.1",
-    "node-cron": "^4.2.1",
     "sqlite3": "^5.1.7",
     "yahoo-finance2": "^3.10.2"
   },
