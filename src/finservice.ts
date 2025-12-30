@@ -19,36 +19,11 @@ export class FinService {
     private yamlData: string[] = []
     private dbsObj: DatabaseService = new DatabaseService();
 
-    public async check_symbol_in_db(symbol: string): Promise<boolean | null> {
+    public async check_symbol_in_db(symbol: string) {
         return await this.dbsObj.check_symbol(symbol);
     }
 
-    public async initialProcess(){
-        try {
-            let now: Date = new Date()
-            let nowUTCString: string= now.toUTCString()
-            let days8Befor: string = new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toUTCString()
-            this.yamlData = this.loadYamlFile('./symbols.yaml');
-        for(const symb of this.yamlData){
-            const result = await this.call_chart(symb, days8Befor as string, nowUTCString as string, '1m')
-            for(const elem of result.quotes){
-                const data : StockData = { 
-                    symbol: symb,
-                    date: elem.date.getTime() / 1000,
-                    high: elem.high ?? 0,
-                    volume: elem.volume ?? 0,
-                    open: elem.open ?? 0,
-                    low: elem.low ?? 0,
-                    close: elem.close ?? 0
-                }
-                this.dbsObj.insertStockData(data)
-            }
-        }} catch (error) {
-            console.error("Error in initialProcess:", error);
-        }
-    }
-
-    private loadYamlFile(filePath: string) {
+    public loadYamlFile(filePath: string) {
         try {
             const fileContents = fs.readFileSync(filePath, 'utf8');
             const data = yaml.load(fileContents) as { symbols: string[] };
@@ -58,61 +33,68 @@ export class FinService {
             throw error;
         }
     }
-
-
-    async call_quote(symbol: string){
-        const quote = await this.yahooFinance.quote(symbol);
-        console.log(quote)
-    }
-
-    // periods must have this format: '2023-01-01'
+    
     async call_chart(symbol:string, start_period1:string, end_period2:string, interv: any){
         try {
             const result = await this.yahooFinance.chart(symbol, {
                 period1: start_period1,
                 period2: end_period2,
                 interval: interv
-        });
-        return result
+            });
+            for(const elem of result.quotes){
+                const data : StockData = { 
+                    symbol: symbol,
+                    date: elem.date.getTime() / 1000,
+                    high: elem.high ?? 0,
+                    volume: elem.volume ?? 0,
+                    open: elem.open ?? 0,
+                    low: elem.low ?? 0,
+                    close: elem.close ?? 0
+                }
+                await this.dbsObj.insertStockData(data)
+                }
         } catch (error) {
             console.error("Error in call_chart:", error);
-            throw error;
         }
     }
 
-    async fill_chart_data(){
-        try {
-            let now: Date = new Date()
-            let nowUTCString: string= now.toUTCString()
-            this.yamlData = this.loadYamlFile('./symbols.yaml');
-            for(const symb of this.yamlData){
-                this.dbsObj.get_last_datetime_of_symbol(symb)
-                    .then(async (last_date) => {
-                        let start_period1: string;
-                        if (last_date) {
-                            const lastDateObj = new Date((last_date * 1000)+1);
-                            let start_period1 = lastDateObj.toUTCString();
-                            // console.log(`${start_period1} ${this.nowUTCString}`);
-                            let result = await this.call_chart(symb, start_period1, nowUTCString as string, '1m')
-                            for(const elem of result.quotes){
-                                const data : StockData = { 
-                                    symbol: symb,
-                                    date: elem.date.getTime() / 1000,
-                                    high: elem.high ?? 0,
-                                    volume: elem.volume ?? 0,
-                                    open: elem.open ?? 0,
-                                    low: elem.low ?? 0,
-                                    close: elem.close ?? 0
-                                }
-                                this.dbsObj.insertStockData(data)
-                            }
-                        }
-                    });
-            }
-        } catch (error) {
-            console.error("Error in fill_chart_data:", error);
-        }
+    async get_last_datetime_o_s(symbol: string){
+        return await this.dbsObj.get_last_datetime_of_symbol(symbol)
     }
+
+    // async fill_chart_data(){
+    //     try {
+    //         let now: Date = new Date()
+    //         let nowUTCString: string= now.toUTCString()
+    //         this.yamlData = this.loadYamlFile('./symbols.yaml');
+    //         for(const symb of this.yamlData){
+    //             await this.dbsObj.get_last_datetime_of_symbol(symb)
+    //                 .then(async (last_date) => {
+    //                     let start_period1: string;
+    //                     if (last_date) {
+    //                         const lastDateObj = new Date((last_date * 1000)+1);
+    //                         let start_period1 = lastDateObj.toUTCString();
+    //                         // console.log(`${start_period1} ${this.nowUTCString}`);
+    //                         let result = await this.call_chart(symb, start_period1, nowUTCString as string, '1m')
+    //                         for(const elem of result.quotes){
+    //                             const data : StockData = { 
+    //                                 symbol: symb,
+    //                                 date: elem.date.getTime() / 1000,
+    //                                 high: elem.high ?? 0,
+    //                                 volume: elem.volume ?? 0,
+    //                                 open: elem.open ?? 0,
+    //                                 low: elem.low ?? 0,
+    //                                 close: elem.close ?? 0
+    //                             }
+    //                             this.dbsObj.insertStockData(data)
+    //                         }
+    //                     }
+    //                 });
+    //         }
+    //     } catch (error) {
+    //         console.error("Error in fill_chart_data:", error);
+    //     }
+    // }
     
     async call_quoteSummary(symbol:string){
         const result = await this.yahooFinance.quoteSummary(symbol, {

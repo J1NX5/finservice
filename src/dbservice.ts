@@ -2,12 +2,11 @@ import sqlite3 from 'sqlite3';
 
 export class DatabaseService {
 
-    private db: sqlite3.Database;
-
-    constructor(){
-        this.db = new sqlite3.Database('database.db', (err) => {
+    private db: sqlite3.Database = new sqlite3.Database('database.db', (err) => {
             if (err) console.error("Error in constructor by create db", err.message);
         });
+
+    constructor(){
         this.initializeDatabase()
     }
 
@@ -47,22 +46,22 @@ export class DatabaseService {
         });
     }
 
-    public check_symbol(symbol: string): Promise<boolean | null> {
-        const sql = `
-            SELECT *
-            FROM stock_data
-            WHERE symbol = ?;
-        `;
-
+    public async check_symbol(symbol: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.db.get(sql, [symbol], (err: Error | null, row: any) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(true);
-                }
-            });
-        });
+            const sql = `
+                SELECT *
+                FROM stock_data
+                WHERE symbol = ?;
+            `;
+
+            this.db.get(sql, symbol, (err, row) => {
+                    if (err) {
+                        resolve(false)
+                    } else {
+                       resolve(!!row)
+                    }
+                });
+            })
     }
 
     public insertStockData(data: {
@@ -79,7 +78,6 @@ export class DatabaseService {
             VALUES (?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(symbol, date) DO NOTHING
         `;
-
         this.db.run(
             sql,
             [data.symbol, data.date, data.high, data.volume, data.open, data.low, data.close],
@@ -88,6 +86,6 @@ export class DatabaseService {
                     console.error("Error in insertStockData", err.message);
                 }
             }
-        );
+        );   
     }
 }
