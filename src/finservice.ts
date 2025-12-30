@@ -73,7 +73,7 @@ export class FinService {
         return result
     }
 
-    async fill_chart_data(symbol:string){
+    async fill_chart_data(){
         this.yamlData = this.loadYamlFile('./symbols.yaml');
         for(const symb of this.yamlData){
             this.dbsObj.get_last_datetime_of_symbol(symb)
