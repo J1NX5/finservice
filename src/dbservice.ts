@@ -17,7 +17,7 @@ export class DatabaseService {
                 CREATE TABLE IF NOT EXISTS stock_data (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     symbol TEXT NOT NULL,
-                    date INTEGER NOT NULL,
+                    date INTEGER NOT NULL UNIQUE,
                     high REAL NOT NULL,
                     volume INTEGER NOT NULL,
                     open REAL NOT NULL,
@@ -41,6 +41,24 @@ export class DatabaseService {
                     reject(err);
                 } else {
                     resolve(row?.last_date ?? null);
+                }
+            });
+        });
+    }
+
+    public check_symbol(symbol: string): Promise<boolean | null> {
+        const sql = `
+            SELECT *
+            FROM stock_data
+            WHERE symbol = ?;
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.get(sql, [symbol], (err: Error | null, row: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(true);
                 }
             });
         });

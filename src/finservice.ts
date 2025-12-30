@@ -26,6 +26,10 @@ export class FinService {
         this.yahooFinance = new YahooFinance();
     }
 
+    public async check_symbol_in_db(symbol: string): Promise<boolean | null> {
+        return await this.dbsObj.check_symbol(symbol);
+    }
+
     public async initialProcess(){
         try {
         this.yamlData = this.loadYamlFile('./symbols.yaml');
