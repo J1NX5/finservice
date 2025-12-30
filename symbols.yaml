@@ -1,6 +1,114 @@
 symbols:
+  # Kryptowährungen
+  - BTC-USD
+  - ETH-USD
+  - XRP-USD
+  - LTC-USD
+  - DOGE-USD
+  - ADA-USD
+  - SOL-USD
+  - DOT-USD
+  - LINK-USD
+  - BCH-USD
+  - XLM-USD
+  - AVAX-USD
+  - MATIC-USD
+  - SHIB-USD
+  - TRX-USD
+  - BTC-EUR
+  - ETH-EUR
+  - ADA-EUR
+  - SOL-EUR
+  - DOGE-EUR
+
+  # Aktien USA
   - AAPL
   - MSFT
-  - GOOGL
   - AMZN
+  - GOOG
+  - GOOGL
+  - META
+  - NVDA
   - TSLA
+  - JPM
+  - BAC
+  - V
+  - MA
+  - UNH
+  - HD
+  - PG
+  - KO
+  - PFE
+  - MRK
+  - WMT
+  - DIS
+
+  # Aktien International
+  - SAP.DE
+  - SIE.DE
+  - ALV.DE
+  - DTE.DE
+  - DB1.DE
+  - ROG.SW
+  - NOVN.SW
+  - BAYN.DE
+  - AIR.PA
+  - HSBA.L
+  - GSK.L
+  - TM
+  - 9984.T
+  - 7203.T
+  - NSANY
+
+  # ETFs
+  - SPY
+  - QQQ
+  - VOO
+  - IVV
+  - EUNL.DE
+  - IWDA.AS
+  - VT
+  - VTI
+  - AGG
+  - HYG
+  - XLF
+  - XLK
+  - XLY
+  - VGT
+  - GLD
+  - SLV
+  - GDX
+  - IAU
+  - USO
+  - UUP
+
+  # Rohstoffe / Futures
+  - GC=F
+  - SI=F
+  - CL=F
+  - NG=F
+  - HG=F
+  - ZS=F
+  - ZC=F
+  - KC=F
+  - LB=F
+  - SB=F
+
+  # Indizes
+  - ^GSPC
+  - ^DJI
+  - ^IXIC
+  - ^FTSE
+  - ^N225
+  - ^GDAXI
+  - ^FCHI
+  - ^HSI
+  - ^STOXX50E
+  - ^RUT
+
+  # Edelmetalle / Miner / Trusts
+  - PALL
+  - PAAS
+  - SLVP
+  - SGOL
+  - BAR

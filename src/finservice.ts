@@ -27,11 +27,11 @@ export class FinService {
     }
 
     public async initialProcess(){
+        try {
         this.yamlData = this.loadYamlFile('./symbols.yaml');
         for(const symb of this.yamlData){
             const result = await this.call_chart(symb, this.days8Befor as string, this.nowUTCString as string, '1m')
             for(const elem of result.quotes){
-                console.log(elem)
                 const data : StockData = { 
                     symbol: symb,
                     date: elem.date.getTime() / 1000,
@@ -43,6 +43,8 @@ export class FinService {
                 }
                 this.dbsObj.insertStockData(data)
             }
+        }} catch (error) {
+            console.error("Error in initialProcess:", error);
         }
     }
 
@@ -65,12 +67,17 @@ export class FinService {
 
     // periods must have this format: '2023-01-01'
     async call_chart(symbol:string, start_period1:string, end_period2:string, interv: any){
+        try {
         const result = await this.yahooFinance.chart(symbol, {
             period1: start_period1,
             period2: end_period2,
             interval: interv
         });
         return result
+        } catch (error) {
+            console.error("Error in call_chart:", error);
+            throw error;
+        }
     }
 
     async fill_chart_data(){
@@ -96,7 +103,6 @@ export class FinService {
                             }
                             this.dbsObj.insertStockData(data)
                         }
-
                     }
                 });
         }
