@@ -68,10 +68,10 @@ export class FinService {
     // periods must have this format: '2023-01-01'
     async call_chart(symbol:string, start_period1:string, end_period2:string, interv: any){
         try {
-        const result = await this.yahooFinance.chart(symbol, {
-            period1: start_period1,
-            period2: end_period2,
-            interval: interv
+            const result = await this.yahooFinance.chart(symbol, {
+                period1: start_period1,
+                period2: end_period2,
+                interval: interv
         });
         return result
         } catch (error) {
