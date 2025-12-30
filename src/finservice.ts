@@ -82,7 +82,7 @@ export class FinService {
                     if (last_date) {
                         const lastDateObj = new Date((last_date * 1000)+1);
                         let start_period1 = lastDateObj.toUTCString();
-                        console.log(`${start_period1} ${this.nowUTCString}`);
+                        // console.log(`${start_period1} ${this.nowUTCString}`);
                         let result = await this.call_chart(symb, start_period1, this.nowUTCString as string, '1m')
                         for(const elem of result.quotes){
                             const data : StockData = { 
