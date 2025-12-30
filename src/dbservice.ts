@@ -66,8 +66,6 @@ export class DatabaseService {
             (err: Error | null) => {
                 if (err) {
                     console.error("Error:", err.message);
-                } else {
-                    console.log("Success");
                 }
             }
         );
