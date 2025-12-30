@@ -28,6 +28,24 @@ export class DatabaseService {
         });
     }
 
+    public get_last_datetime_of_symbol(symbol: string): Promise<number | null> {
+        const sql = `
+            SELECT MAX(date) AS last_date
+            FROM stock_data
+            WHERE symbol = ?;
+        `;
+
+        return new Promise((resolve, reject) => {
+            this.db.get(sql, [symbol], (err: Error | null, row: any) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(row?.last_date ?? null);
+                }
+            });
+        });
+    }
+
     public insertStockData(data: {
         symbol: string,
         date: number;

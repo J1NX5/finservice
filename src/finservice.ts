@@ -72,6 +72,35 @@ export class FinService {
         });
         return result
     }
+
+    async fill_chart_data(symbol:string){
+        this.yamlData = this.loadYamlFile('./symbols.yaml');
+        for(const symb of this.yamlData){
+            this.dbsObj.get_last_datetime_of_symbol(symb)
+                .then(async (last_date) => {
+                    let start_period1: string;
+                    if (last_date) {
+                        const lastDateObj = new Date((last_date * 1000)+1);
+                        let start_period1 = lastDateObj.toUTCString();
+                        console.log(`${start_period1} ${this.nowUTCString}`);
+                        let result = await this.call_chart(symb, start_period1, this.nowUTCString as string, '1m')
+                        for(const elem of result.quotes){
+                            const data : StockData = { 
+                                symbol: symb,
+                                date: elem.date.getTime() / 1000,
+                                high: elem.high ?? 0,
+                                volume: elem.volume ?? 0,
+                                open: elem.open ?? 0,
+                                low: elem.low ?? 0,
+                                close: elem.close ?? 0
+                            }
+                            this.dbsObj.insertStockData(data)
+                        }
+
+                    }
+                });
+        }
+    }
     
     async call_quoteSummary(symbol:string){
         const result = await this.yahooFinance.quoteSummary(symbol, {
