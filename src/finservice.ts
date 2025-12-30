@@ -16,9 +16,6 @@ interface StockData {
 export class FinService {
 
     private yahooFinance: InstanceType<typeof YahooFinance>;
-    private now: Date = new Date()
-    private nowUTCString: String= this.now.toUTCString()
-    private days8Befor: String = new Date(this.now.getTime() - 8 * 24 * 60 * 60 * 1000).toUTCString()
     private yamlData: string[] = []
     private dbsObj: DatabaseService = new DatabaseService();
 
@@ -32,9 +29,12 @@ export class FinService {
 
     public async initialProcess(){
         try {
-        this.yamlData = this.loadYamlFile('./symbols.yaml');
+            let now: Date = new Date()
+            let nowUTCString: string= now.toUTCString()
+            let days8Befor: string = new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toUTCString()
+            this.yamlData = this.loadYamlFile('./symbols.yaml');
         for(const symb of this.yamlData){
-            const result = await this.call_chart(symb, this.days8Befor as string, this.nowUTCString as string, '1m')
+            const result = await this.call_chart(symb, days8Befor as string, nowUTCString as string, '1m')
             for(const elem of result.quotes){
                 const data : StockData = { 
                     symbol: symb,
@@ -86,6 +86,8 @@ export class FinService {
 
     async fill_chart_data(){
         try {
+            let now: Date = new Date()
+            let nowUTCString: string= now.toUTCString()
             this.yamlData = this.loadYamlFile('./symbols.yaml');
             for(const symb of this.yamlData){
                 this.dbsObj.get_last_datetime_of_symbol(symb)
@@ -95,7 +97,7 @@ export class FinService {
                             const lastDateObj = new Date((last_date * 1000)+1);
                             let start_period1 = lastDateObj.toUTCString();
                             // console.log(`${start_period1} ${this.nowUTCString}`);
-                            let result = await this.call_chart(symb, start_period1, this.nowUTCString as string, '1m')
+                            let result = await this.call_chart(symb, start_period1, nowUTCString as string, '1m')
                             for(const elem of result.quotes){
                                 const data : StockData = { 
                                     symbol: symb,
