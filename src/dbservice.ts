@@ -77,6 +77,7 @@ export class DatabaseService {
         const sql = `
             INSERT INTO stock_data (symbol, date, high, volume, open, low, close)
             VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(symbol, date) DO NOTHING
         `;
 
         this.db.run(
