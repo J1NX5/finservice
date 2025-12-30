@@ -15,13 +15,9 @@ interface StockData {
 
 export class FinService {
 
-    private yahooFinance: InstanceType<typeof YahooFinance>;
+    private yahooFinance: InstanceType<typeof YahooFinance> = new YahooFinance();
     private yamlData: string[] = []
     private dbsObj: DatabaseService = new DatabaseService();
-
-    constructor(){
-        this.yahooFinance = new YahooFinance();
-    }
 
     public async check_symbol_in_db(symbol: string): Promise<boolean | null> {
         return await this.dbsObj.check_symbol(symbol);
