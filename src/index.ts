@@ -16,7 +16,7 @@ const sleep = (ms: number) =>
                 let now: Date = new Date()
                 let nowUTCString: string= now.toUTCString()
                 // console.time('call_chart to fill up')
-                console.log(`Run call_chart with signature 
+                console.log(`Run call_chart with params 
                     last_date:${last_date}, 
                     ldUTCString:${ldUTCString},
                     now:${now},
@@ -31,7 +31,7 @@ const sleep = (ms: number) =>
                 let nowUTCString: string= now.toUTCString()
                 let days8Befor: string = new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000).toUTCString()
                 // console.time('call_chart for new data')
-                console.log(`Run call_chart with signature 
+                console.log(`Run call_chart with params
                     now:${now}, 
                     nowUTCString:${nowUTCString},
                     days8Befor: ${days8Befor}
