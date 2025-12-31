@@ -1,0 +1,8 @@
+services:
+  finservice:
+    container_name: finservice-service-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm start
+    restart: unless-stopped

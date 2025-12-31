@@ -26,7 +26,7 @@ const sleep = (ms: number) =>
                 await finService.call_chart(symb, days8Befor, nowUTCString, '1m')
                 console.timeEnd('call_chart for new data')
             }
-            await sleep(20000)
+            await sleep(50000)
         }
         await sleep(200000)
     }
