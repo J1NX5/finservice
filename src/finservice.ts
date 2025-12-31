@@ -35,8 +35,6 @@ export class FinService {
     }
     
     async call_chart(symbol:string, start_period1:string, end_period2:string, interv: any){
-        let count_insert: number = 0
-        let count_error: number = 0
         try {
             const result = await this.yahooFinance.chart(symbol, {
                 period1: start_period1,
@@ -52,15 +50,12 @@ export class FinService {
                     open: elem.open ?? 0,
                     low: elem.low ?? 0,
                     close: elem.close ?? 0
-                }
-                await this.dbsObj.insertStockData(data)
-                count_insert += 1
-                }
+            }
+            await this.dbsObj.insertStockData(data)
+            }
         } catch (error) {
-            count_error += 1
             console.error("Error in call_chart:", error);
-        }
-        console.log(`call_chart runs for Symbol:${symbol} with inserts: ${count_insert} and errors: ${count_error}`)
+        } 
     }
 
     async get_last_datetime_o_s(symbol: string){
