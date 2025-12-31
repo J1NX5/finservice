@@ -2,12 +2,15 @@ import { FinService } from "./finservice.js";
 
 const finService = new FinService();
 const symbol: string[] = finService.loadYamlFile('./symbols.yaml');
+const interval_symbol: number = Number(process.env.INTERVAL_SYMBOL)
+const interval_round: number = Number(process.env.INTERVAL_ROUND)
 
 const sleep = (ms: number) =>
     new Promise(resolve => setTimeout(resolve, ms));
 
 (async () => {
     while(true){
+        console.log(`Start loop with interval_symbol: ${interval_symbol}, interval_round: ${interval_round}`);
         for(const symb of symbol){
             if(await finService.check_symbol_in_db(symb)){
                 console.log(`Run case symbol exist`)
@@ -39,10 +42,10 @@ const sleep = (ms: number) =>
                 await finService.call_chart(symb, days8Befor, nowUTCString, '1m')
                 // console.timeEnd('call_chart for new data')
             }
-            console.log('go sleep 50 sec.')
-            await sleep(50000)
+            console.log(`go sleep ${interval_symbol/1000} sec.`)
+            await sleep(interval_symbol)
         }
-        console.log('wait for next round 20 min.')
-        await sleep(200000)
+        console.log(`wait for next round ${interval_round/1000/60} min.`)
+        await sleep(interval_round)
     }
 })();

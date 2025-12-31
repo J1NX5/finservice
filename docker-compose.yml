@@ -6,5 +6,8 @@ services:
       dockerfile: Dockerfile
     command: npm start
     restart: unless-stopped
+    environment:
+      - INTERVAL_SYMBOL=30000
+      - INTERVAL_ROUND=1800000
     volumes:
       - ~/data:/app/data
