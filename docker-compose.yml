@@ -6,3 +6,5 @@ services:
       dockerfile: Dockerfile
     command: npm start
     restart: unless-stopped
+    volumes:
+      - ~/data:/app/data

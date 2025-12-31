@@ -2,7 +2,7 @@ import sqlite3 from 'sqlite3';
 
 export class DatabaseService {
 
-    private db: sqlite3.Database = new sqlite3.Database('database.db', (err) => {
+    private db: sqlite3.Database = new sqlite3.Database('data/database.db', (err) => {
             if (err) console.error("Error in constructor by create db", err.message);
         });
 
