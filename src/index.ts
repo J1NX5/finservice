@@ -12,13 +12,14 @@ const sleep = (ms: number) =>
     while(true){
         console.log(`Start loop with interval_symbol: ${interval_symbol}, interval_round: ${interval_round}`);
         for(const symb of symbol){
+            let count_inserts: number = 0
+            let count_errors: number = 0
             if(await finService.check_symbol_in_db(symb)){
                 console.log(`Run case symbol exist`)
                 let last_date = await finService.get_last_datetime_o_s(symb)
                 let ldUTCString = new Date(Number(last_date) * 1000 + 1000).toUTCString()
                 let now: Date = new Date()
                 let nowUTCString: string= now.toUTCString()
-                // console.time('call_chart to fill up')
                 console.log(`Run call_chart with params 
                     last_date:${last_date}, 
                     ldUTCString:${ldUTCString},
@@ -26,8 +27,13 @@ const sleep = (ms: number) =>
                     last_date:${last_date},
                     nowUTCString:${nowUTCString}
                 `)
-                await finService.call_chart(symb, ldUTCString, nowUTCString, '1m')
-                // console.timeEnd('call_chart to fill up')
+                try {
+                    await finService.call_chart(symb, ldUTCString, nowUTCString, '1m')
+                    count_inserts += 1
+                } catch {
+                    count_errors += 1
+                }
+                
             } else {
                 console.log(`Run case symbol not exist`)
                 let now: Date = new Date()
@@ -39,9 +45,16 @@ const sleep = (ms: number) =>
                     nowUTCString:${nowUTCString},
                     days8Befor: ${days8Befor}
                 `)
-                await finService.call_chart(symb, days8Befor, nowUTCString, '1m')
+                try {
+                    await finService.call_chart(symb, days8Befor, nowUTCString, '1m')
+                    count_inserts += 1
+                } catch {
+                    count_errors += 1
+                }
+                
                 // console.timeEnd('call_chart for new data')
             }
+            console.log(`Round for Symbol:${symb}, Inserts:${count_inserts}, Errors: ${count_errors}`)
             console.log(`go sleep ${interval_symbol/1000} sec.`)
             await sleep(interval_symbol)
         }
