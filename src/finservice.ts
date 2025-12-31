@@ -60,7 +60,7 @@ export class FinService {
             count_error += 1
             console.error("Error in call_chart:", error);
         }
-        console.log(`call_chart runs for Symbol:${symbol} with inserts:${count_insert} and errors:${count_error}`)
+        console.log(`call_chart runs for Symbol:${symbol} with inserts: ${count_insert} and errors: ${count_error}`)
     }
 
     async get_last_datetime_o_s(symbol: string){
